@@ -377,3 +377,11 @@ These were proposed and vetoed. Do not enforce them, and do not present them as 
 - **D4 — Single source of truth for storage** (vetoed): No more 'which copy is current?'
 - **D6 — Provenance link from result to data and code** (vetoed): A reviewer will ask two years later.
 - **H2 — Code review for shared or published pipelines** (vetoed): Cheap insurance where it counts.
+
+## How to use this file
+
+You are expected to audit, not to edit. For each rule ID report PASS, FAIL, or
+N/A, and name the file or command that proves it. Do not invent rules, do not
+report anything from the "Not adopted" list as a failure, and say "cannot verify"
+for anything that depends on facts outside the repository (D5 backups, D7 access
+control, whether a documented storage path is still live).
