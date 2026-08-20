@@ -1,0 +1,187 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lab Coding &amp; Data Management Guidelines</title>
+<style>
+:root {
+  --bg:#fff; --fg:#1c1e21; --mut:#606770; --line:#e3e5e8; --sub:#f6f7f8;
+  --accent:#2563eb; --side:#fbfbfc;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#1b1b1d; --fg:#e3e3e3; --mut:#9a9a9d; --line:#2e2e31; --sub:#242526;
+          --accent:#60a5fa; --side:#1b1b1d; }
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--fg);
+  font:16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
+.layout { display:grid; grid-template-columns:290px minmax(0,1fr); }
+aside { position:sticky; top:0; height:100vh; overflow-y:auto; padding:1.5rem 1rem 3rem;
+  background:var(--side); border-right:1px solid var(--line); }
+.brand { font-weight:700; font-size:.95rem; padding:.2rem .6rem 1rem; display:block;
+  color:var(--fg); text-decoration:none; }
+.search { width:100%; margin:0 0 .4rem; padding:.5rem .7rem; border:1px solid var(--line);
+  border-radius:8px; background:var(--bg); color:var(--fg); font:inherit; font-size:.85rem; }
+.search:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+.hide { display:none; }
+.empty { color:var(--mut); font-size:.9rem; padding:1rem 0; }
+.navgroup { font:700 .68rem/1 inherit; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--mut); margin:1.2rem .6rem .4rem; }
+aside a { display:block; font-size:.855rem; color:var(--mut); text-decoration:none;
+  padding:.3rem .6rem; border-radius:6px; }
+aside a span { display:inline-block; min-width:2.1em; color:var(--accent); font-weight:600; }
+aside a:hover { background:var(--sub); color:var(--fg); }
+main { padding:3rem 2.5rem 6rem; max-width:820px; }
+header { margin-bottom:2.5rem; }
+h1 { font-size:2.1rem; letter-spacing:-.02em; margin:.2rem 0 .5rem; }
+.sub { color:var(--mut); font-size:.92rem; margin:0; }
+.sub a { color:var(--accent); }
+h2 { font-size:1.45rem; letter-spacing:-.01em; margin:3rem 0 .5rem; padding-top:.8rem;
+  border-top:1px solid var(--line); scroll-margin-top:1rem; }
+article { padding:1.1rem 0; border-bottom:1px solid var(--line); scroll-margin-top:1rem; }
+article:last-child { border-bottom:0; }
+h3 { font-size:1.02rem; margin:0 0 .25rem; }
+.anchor { color:var(--accent); text-decoration:none; font:600 .78rem ui-monospace,monospace;
+  margin-right:.55rem; }
+article p { margin:0 0 .7rem; color:var(--mut); font-size:.94rem; }
+pre { background:var(--sub); border:1px solid var(--line); border-radius:8px;
+  padding:.85rem 1rem; overflow-x:auto; margin:0; }
+code { font:13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+table { border-collapse:collapse; width:100%; font-size:.9rem; margin-top:1rem; }
+th, td { border:1px solid var(--line); padding:.45rem .7rem; text-align:left; }
+th { background:var(--sub); font-size:.8rem; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--mut); }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  aside { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); }
+  main { padding:2rem 1.25rem 4rem; }
+}
+</style>
+<div class="layout">
+<aside>
+  <a class="brand" href="#top">Adamo Lab · Guidelines</a>
+  <input class="search" id="q" type="search" placeholder="Search rules…" autocomplete="off">
+  <p class="navgroup">Repository &amp; Project Structure</p><a href="#S1"><span>S1</span> One repo per project, not per person</a><a href="#S2"><span>S2</span> Standard top-level layout</a><a href="#S3"><span>S3</span> No data committed to git</a><a href="#S4"><span>S4</span> README answers three questions</a><p class="navgroup">Version Control</p><a href="#V1"><span>V1</span> All project code under git</a><a href="#V3"><span>V3</span> Main branch always runs</a><a href="#V4"><span>V4</span> Shared remote org, not personal accounts</a><p class="navgroup">Environments &amp; Reproducibility</p><a href="#E1"><span>E1</span> Every project pins its environment</a><a href="#E2"><span>E2</span> One command reproduces the main result</a><a href="#E3"><span>E3</span> Set and record a random seed</a><a href="#E4"><span>E4</span> Scripts or clean notebooks for published results</a><p class="navgroup">Coding Conventions</p><a href="#C1"><span>C1</span> Auto-formatter per language</a><a href="#C2"><span>C2</span> Descriptive names beat comments that explain bad names</a><a href="#C3"><span>C3</span> No hard-coded absolute paths</a><a href="#C4"><span>C4</span> Functions for anything used more than twice</a><a href="#C5"><span>C5</span> Config at the top, not scattered</a><p class="navgroup">Naming Conventions</p><a href="#N1"><span>N1</span> Python identifiers follow PEP 8</a><a href="#N2"><span>N2</span> R identifiers follow the tidyverse style</a><a href="#N4"><span>N4</span> Shell: snake_case locals, UPPER_SNAKE exported</a><a href="#N5"><span>N5</span> Constants and classes are cross-language</a><a href="#N6"><span>N6</span> Filesystem names are lowercase</a><a href="#N7"><span>N7</span> No spaces in names</a><a href="#N8"><span>N8</span> Restrict names to a-z 0-9 - _ .</a><a href="#N9"><span>N9</span> Avoid reserved names, keep paths short</a><a href="#N10"><span>N10</span> Repositories and branches use kebab-case</a><a href="#N11"><span>N11</span> Directories use kebab-case</a><a href="#N12"><span>N12</span> Script files follow language import rules</a><a href="#N14"><span>N14</span> Config keys use snake_case</a><p class="navgroup">Data Management</p><a href="#D2"><span>D2</span> Consistent, sortable file naming</a><a href="#D3"><span>D3</span> Every dataset has a data dictionary</a><a href="#D5"><span>D5</span> 3-2-1 backup for irreplaceable raw data</a><a href="#D7"><span>D7</span> Sensitive data documented and access-controlled</a><p class="navgroup">Collaboration &amp; Handover</p><a href="#H1"><span>H1</span> Leaving-the-lab checklist</a><p class="navgroup">Reference</p><a href="#naming"><span>—</span> Naming cheatsheet</a>
+</aside>
+<main id="top">
+<header>
+  <h1>Coding &amp; Data Management Guidelines</h1>
+  <p class="sub">33 rules the lab agreed to follow &middot;
+  <a href="guidelines.pdf">full handbook (PDF)</a> &middot;
+  <a href="llms.txt">llms.txt</a></p>
+</header>
+<section class="grp"><h2 id="repository-project-structure">Repository &amp; Project Structure</h2><article id="S1"><h3><a class="anchor" href="#S1">S1</a>One repo per project, not per person</h3><p>The work survives the author leaving.</p><pre><code>adamolab/                  # one GitHub org
+├── reaction-time-study/   # one repo per project
+├── eye-tracking-2026/
+└── saccade-model/</code></pre></article><article id="S2"><h3><a class="anchor" href="#S2">S2</a>Standard top-level layout</h3><p>You find things without asking anyone.</p><pre><code>saccade-model/
+├── README.md
+├── data/            # or a pointer to storage
+├── src/
+├── results/
+└── environment.yml</code></pre></article><article id="S3"><h3><a class="anchor" href="#S3">S3</a>No data committed to git</h3><p>Git chokes on large binaries.</p><pre><code># .gitignore
+data/
+*.h5
+
+# version data with DVC instead of git
+dvc add data/raw.h5</code></pre></article><article id="S4"><h3><a class="anchor" href="#S4">S4</a>README answers three questions</h3><p>New members onboard without you.</p><pre><code># Saccade Model
+**What:** fits saccade latency from eye-tracking data.
+**Setup:** `conda env create -f environment.yml`
+**Run:** `make all`</code></pre></article></section><section class="grp"><h2 id="version-control">Version Control</h2><article id="V1"><h3><a class="anchor" href="#V1">V1</a>All project code under git</h3><p>The throwaway script made a figure.</p><pre><code>git init
+git add analysis.py figures.R
+git commit -m &quot;Initial analysis pipeline&quot;</code></pre></article><article id="V3"><h3><a class="anchor" href="#V3">V3</a>Main branch always runs</h3><p>A colleague may pull at any moment.</p><pre><code>git switch -c fix-outlier-filter
+# ...work, run tests...
+git switch main
+git merge fix-outlier-filter   # only once green</code></pre></article><article id="V4"><h3><a class="anchor" href="#V4">V4</a>Shared remote org, not personal accounts</h3><p>Access outlives any one person.</p><pre><code># lab org remote, not a personal account
+git remote add origin \
+  git@github.com:adamolab/saccade-model.git</code></pre></article></section><section class="grp"><h2 id="environments-reproducibility">Environments &amp; Reproducibility</h2><article id="E1"><h3><a class="anchor" href="#E1">E1</a>Every project pins its environment</h3><p>&#x27;Works on my machine&#x27; is not a result.</p><pre><code># environment.yml
+name: saccade
+dependencies:
+  - python=3.11
+  - numpy=1.26.4
+  - pandas=2.2.1</code></pre></article><article id="E2"><h3><a class="anchor" href="#E2">E2</a>One command reproduces the main result</h3><p>Untested reproducibility is a guess.</p><pre><code>all: results/fig1.pdf
+
+results/fig1.pdf: src/plot.py data/clean.csv
+	python src/plot.py</code></pre></article><article id="E3"><h3><a class="anchor" href="#E3">E3</a>Set and record a random seed</h3><p>Same input should give the same figure.</p><pre><code>import numpy as np, torch
+SEED = 42
+np.random.seed(SEED)
+torch.manual_seed(SEED)</code></pre></article><article id="E4"><h3><a class="anchor" href="#E4">E4</a>Scripts or clean notebooks for published results</h3><p>Out-of-order cells lie.</p><pre><code># run a notebook top-to-bottom, no manual state
+jupyter nbconvert --to notebook --execute \
+  --output out.ipynb analysis.ipynb</code></pre></article></section><section class="grp"><h2 id="coding-conventions">Coding Conventions</h2><article id="C1"><h3><a class="anchor" href="#C1">C1</a>Auto-formatter per language</h3><p>No human should format code.</p><pre><code>black src/                          # Python
+Rscript -e &#x27;styler::style_dir(&quot;R&quot;)&#x27;  # R
+shfmt -w scripts/                   # Shell</code></pre></article><article id="C2"><h3><a class="anchor" href="#C2">C2</a>Descriptive names beat comments that explain bad names</h3><p>A good name never goes stale.</p><pre><code># bad
+srt = df[df.srt &gt; 0.1]
+# good
+valid = trials[trials.reaction_time &gt; 0.1]</code></pre></article><article id="C3"><h3><a class="anchor" href="#C3">C3</a>No hard-coded absolute paths</h3><p>/Users/alice/ breaks for everyone else.</p><pre><code># bad
+df = pd.read_csv(&quot;/Users/alice/data/rt.csv&quot;)
+# good
+from pathlib import Path
+DATA = Path(__file__).parent / &quot;data&quot;
+df = pd.read_csv(DATA / &quot;rt.csv&quot;)</code></pre></article><article id="C4"><h3><a class="anchor" href="#C4">C4</a>Functions for anything used more than twice</h3><p>Fix it once, not in five places.</p><pre><code>def zscore(x):
+    return (x - x.mean()) / x.std()
+
+rt_z  = zscore(df.rt)
+amp_z = zscore(df.amp)</code></pre></article><article id="C5"><h3><a class="anchor" href="#C5">C5</a>Config at the top, not scattered</h3><p>Changing a run should take one edit.</p><pre><code># config.py
+RAW    = &quot;data/raw.csv&quot;
+RT_MIN = 0.1
+N_BOOT = 10_000</code></pre></article></section><section class="grp"><h2 id="naming-conventions">Naming Conventions</h2><article id="N1"><h3><a class="anchor" href="#N1">N1</a>Python identifiers follow PEP 8</h3><p>The linter and every reader expect it.</p><pre><code>rt_min = 0.1                 # variable: snake_case
+RT_MAX = 2.0                 # constant: UPPER_SNAKE
+def clean_trials(raw): ...   # function: snake_case
+class SaccadeModel: ...      # class: PascalCase</code></pre></article><article id="N2"><h3><a class="anchor" href="#N2">N2</a>R identifiers follow the tidyverse style</h3><p>A dot means an S3 method, so avoid dots.</p><pre><code>rt_min &lt;- 0.1                       # snake_case
+clean_trials &lt;- function(raw) { }   # snake_case
+# avoid: clean.trials  (dot = S3 method)</code></pre></article><article id="N4"><h3><a class="anchor" href="#N4">N4</a>Shell: snake_case locals, UPPER_SNAKE exported</h3><p>Hyphens are illegal in shell variable names.</p><pre><code>DATA_ROOT=/mnt/labshare      # exported: UPPER_SNAKE
+clean_trials() {             # function: snake_case
+  local raw_file=&quot;$1&quot;        # local: snake_case
+}</code></pre></article><article id="N5"><h3><a class="anchor" href="#N5">N5</a>Constants and classes are cross-language</h3><p>Keep the shouted categories recognizable.</p><pre><code>UPPER_SNAKE_CASE   constants, env vars   (all languages)
+PascalCase         classes, types        (all languages)</code></pre></article><article id="N6"><h3><a class="anchor" href="#N6">N6</a>Filesystem names are lowercase</h3><p>Data/ and data/ collide across machines.</p><pre><code>mkdir raw-data        # good
+mkdir Raw_Data        # collides on case-insensitive macOS</code></pre></article><article id="N7"><h3><a class="anchor" href="#N7">N7</a>No spaces in names</h3><p>Spaces force quoting and break scripts.</p><pre><code>eye-tracking-data.csv     # good
+eye tracking data.csv     # needs quoting everywhere</code></pre></article><article id="N8"><h3><a class="anchor" href="#N8">N8</a>Restrict names to a-z 0-9 - _ .</h3><p>Other characters are illegal or shell-special.</p><pre><code>s01_congruent_v02.csv     # good
+s01:congruent (2)!.csv    # illegal on Windows, shell-hostile</code></pre></article><article id="N9"><h3><a class="anchor" href="#N9">N9</a>Avoid reserved names, keep paths short</h3><p>Windows chokes on con, nul, and long paths.</p><pre><code>reserved on Windows: con prn aux nul com1..com9 lpt1..lpt9
+keep the full path under 260 characters</code></pre></article><article id="N10"><h3><a class="anchor" href="#N10">N10</a>Repositories and branches use kebab-case</h3><p>Matches GitHub, URLs, and the ecosystem.</p><pre><code>adamolab/eye-tracking-2026         # repo
+git switch -c fix-outlier-filter   # branch</code></pre></article><article id="N11"><h3><a class="anchor" href="#N11">N11</a>Directories use kebab-case</h3><p>Readable in a URL and a terminal.</p><pre><code>saccade-model/
+├── raw-data/
+├── figure-scripts/
+└── clean-output/</code></pre></article><article id="N12"><h3><a class="anchor" href="#N12">N12</a>Script files follow language import rules</h3><p>Python cannot import a hyphenated module.</p><pre><code>data_cleaning.py     # Python module, importable
+clean_data.R         # R script
+run-analysis.sh      # shell tool, a CLI command</code></pre></article><article id="N14"><h3><a class="anchor" href="#N14">N14</a>Config keys use snake_case</h3><p>They map straight onto code variables.</p><pre><code># config.yml
+rt_min: 0.1
+n_boot: 10000
+data_root: /mnt/labshare</code></pre></article></section><section class="grp"><h2 id="data-management">Data Management</h2><article id="D2"><h3><a class="anchor" href="#D2">D2</a>Consistent, sortable file naming</h3><p>final_final2 is where projects die.</p><pre><code>2026-07-08_s01_congruent_v02.csv
+2026-07-08_s02_incongruent_v02.csv
+# not:  final data (2)!!.csv</code></pre></article><article id="D3"><h3><a class="anchor" href="#D3">D3</a>Every dataset has a data dictionary</h3><p>Data without metadata turns to noise.</p><pre><code># data_dictionary.md
+rt        Reaction time, seconds
+accuracy  1 = correct, 0 = error
+subject   Anonymized ID (s01..s40)</code></pre></article><article id="D5"><h3><a class="anchor" href="#D5">D5</a>3-2-1 backup for irreplaceable raw data</h3><p>Irreplaceable means irreplaceable.</p><pre><code>copy 1  /mnt/labshare/saccade     primary
+copy 2  external HDD              weekly rsync
+copy 3  institutional cloud      offsite</code></pre></article><article id="D7"><h3><a class="anchor" href="#D7">D7</a>Sensitive data documented and access-controlled</h3><p>Law and ethics require it.</p><pre><code>python deidentify.py raw/ -o safe/
+chmod 700 safe/            # owner-only access</code></pre></article></section><section class="grp"><h2 id="collaboration-handover">Collaboration &amp; Handover</h2><article id="H1"><h3><a class="anchor" href="#H1">H1</a>Leaving-the-lab checklist</h3><p>Most lost work traces to a departure.</p><pre><code>[ ] code pushed to origin
+[ ] environment.yml committed
+[ ] data location in README
+[ ] README run steps current</code></pre></article></section><h2 id="naming">Naming cheatsheet</h2><table><thead><tr><th>What</th><th>Case</th><th>Example</th></tr></thead><tbody><tr><td>Repository, git branch</td><td>kebab-case</td><td><code>eye-tracking-2026</code></td></tr><tr><td>Directory</td><td>kebab-case</td><td><code>raw-data/</code></td></tr><tr><td>Python / R script</td><td>snake_case</td><td><code>data_cleaning.py</code></td></tr><tr><td>Shell tool</td><td>kebab-case</td><td><code>run-analysis.sh</code></td></tr><tr><td>Variable, function</td><td>snake_case</td><td><code>reaction_time</code></td></tr><tr><td>Class, type</td><td>PascalCase</td><td><code>SaccadeModel</code></td></tr><tr><td>Constant, env var</td><td>UPPER_SNAKE_CASE</td><td><code>RT_MIN</code></td></tr><tr><td>Config key</td><td>snake_case</td><td><code>rt_min</code></td></tr></tbody></table></section>
+</main>
+</div>
+<p class="empty hide" id="none">No rule matches that.</p>
+<script>
+// ponytail: substring filter over 33 rules. No index, no library.
+const q = document.getElementById('q');
+const arts = [...document.querySelectorAll('article')];
+const grps = [...document.querySelectorAll('.grp')];
+const links = [...document.querySelectorAll('aside a[href^="#"]:not(.brand)')];
+arts.forEach(a => a.dataset.t = a.textContent.toLowerCase());
+q.addEventListener('input', () => {
+  const t = q.value.trim().toLowerCase();
+  arts.forEach(a => a.classList.toggle('hide', !!t && !a.dataset.t.includes(t)));
+  grps.forEach(g => g.classList.toggle('hide',
+    !!t && !g.querySelector('article:not(.hide)') && !g.querySelector('table')));
+  links.forEach(l => l.classList.toggle('hide',
+    !!t && !l.textContent.toLowerCase().includes(t)));
+  document.querySelectorAll('.navgroup').forEach(p => {
+    let n = p.nextElementSibling, any = false;
+    while (n && n.tagName === 'A') { any ||= !n.classList.contains('hide'); n = n.nextElementSibling; }
+    p.classList.toggle('hide', !!t && !any);
+  });
+});
+addEventListener('keydown', e => {
+  if (e.key === '/' && e.target !== q) { e.preventDefault(); q.focus(); }
+});
+</script>
+
